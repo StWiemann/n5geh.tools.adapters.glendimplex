@@ -104,11 +104,11 @@ class GlendimplexAdapter:
         except Exception as e:
             print(datetime.datetime.now(), "- (MQTT) Could not connect to MQTT with Error: ", e)
 
-def main(username, password, host, port, tls, sub_topic, debug, iota_endpoint, api_key):
+def main():
     mqtt_adapter = GlendimplexAdapter(username, password, host, port, tls, sub_topic, debug, iota_endpoint, api_key)
     mqtt_adapter.connect_mqtt()
 
 if __name__ == "__main__":
-    main(username, password, host, port, tls, sub_topic, debug, iota_endpoint, api_key)
+    main()
     
 
