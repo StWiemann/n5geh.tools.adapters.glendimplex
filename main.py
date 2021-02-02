@@ -52,6 +52,7 @@ class GlendimplexAdapter:
         print("Connected with result code "+str(rc))
         if rc == 0:                                     # if successfully connected
             self.client.subscribe(self.sub_topic)
+            print(datetime.datetime.now(), "- (MQTT) Subscribed to topic: ", self.sub_topic)
         else:
             print(datetime.datetime.now(), "- (MQTT) Failed to Connect to Broker")
 
@@ -91,12 +92,13 @@ class GlendimplexAdapter:
             self.client.on_message = self.on_message
            # self.client.loop_start()                 # Make sure reconnect is handled automatically
             self.client.connect(self.host, self.port, 60)
-            print(datetime.datetime.now(), "- (MQTT) Subscribed to topic: ", self.sub_topic)
             self.client.loop_forever(timeout=1.0, max_packets=1, retry_first_connection=True)
             #return client
 
         except Exception as e:
             print(datetime.datetime.now(), "- (MQTT) Could not connect to MQTT with Error: ", e)
+            time.sleep(5)
+            self.connect_mqtt()
 
 def main():
     port = int(str_port)
