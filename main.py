@@ -84,24 +84,27 @@ class GlendimplexAdapter:
         if rc == 0:
             client.subscribe(self.sub_topic)
             logger.info("(MQTT) Subscribed to topic: %s", self.sub_topic)
+        else:
+            logger.error("(MQTT) Could not connect to MQTT. Error: %s", rc)
 
-    def on_message(self, client, userdata, message):
+    def on_message(self, client, userdata, msg):
         try:
-            message = json.loads(message.payload)
-            self.timestamp = message["timestamp"]
-            self.device = message["device_id"]
             self.payload = {}
+            logger.debug(" msg.payload: %s", msg.payload)
+            message = json.loads(msg.payload)
+            topic = msg.topic.lower()
+            self.device = topic.split("/")[2]
             for modbus_attr in message:
-                if modbus_attr != "timestamp" and modbus_attr != "device_id":
-                    for data_point in message[modbus_attr]["value_batch"]:
-                        self.payload[
-                            message[modbus_attr]["value_batch"][data_point]["name"]
-                        ] = message[modbus_attr]["value_batch"][data_point]["value"]
-
+                self.timestamp = message[modbus_attr]["timestamp"]
+                for data_point in message[modbus_attr]["value_batch"]:
+                    self.payload[
+                        message[modbus_attr]["value_batch"][data_point]["name"]
+                    ] = message[modbus_attr]["value_batch"][data_point]["value"]
                     logger.debug(
                         "Timestamp: %s, Payload: %s", self.timestamp, self.payload
                     )
                 self.send_http()
+
         except Exception as e:
             logger.error(
                 "(MQTT) Could not read values from Message: %s. Error: %s", message, e
