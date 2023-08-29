@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  mqtt-adapter:
+    image: your_image_name
+    environment:
+      - MQTT_USER=your_mqtt_user
+      - MQTT_PASSWORD=your_mqtt_password
+      - MQTT_HOST=your_mqtt_host
+      - MQTT_PORT=your_mqtt_port
+      - TLS_BOOL=your_tls_boolean
+      - SUB_TOPIC=your_sub_topic
+      - LOG_LEVEL=your_debug_boolean
+      - IOTA_ENDPOINT=your_iota_endpoint
+      - API_KEY=your_api_key
